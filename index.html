@@ -15,6 +15,18 @@
                 <div class="product-info">
                     <h1>{{ product }}</h1>
                     <p>{{ description }}</p>
+                    <ul>
+                        <li v-for="detail in details">{{ detail }}</li>
+                    </ul>
+
+                    <div v-for="variant in variants" :key="variant.variantId">
+                        <p>{{ variant.variantColor }}</p>
+                    </div>
+
+                    <ul>
+                        <li v-for="size in sizes">{{ size }}</li>
+                    </ul>
+
                     <p v-if="stock_count > 10">Em estoque</p>
                     <p v-else-if="stock_count <= 10 && stock_count > 0">Quase acabando</p>
                     <p v-else>Acabou o estoque</p>

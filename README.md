@@ -150,3 +150,39 @@ data: {
 ```html
 <button v-show="stock_count > 0">Comprar</button>
 ```
+
+## Renderização de lista ##
+
+- Incluir a lista para mostrar os detalhes do produto no index.html
+```html
+<ul>
+    <li v-for="detail in details">{{ detail }}</li>
+</ul>
+```
+
+- Incluir a lista no main.js
+```js
+details: ["80% algodão", "20% poliester", "Confortável"]
+```
+
+- Incluir lista de variações do produto no index.html
+```html
+<div v-for="variant in variants" :key="variant.variantId">
+    <p>{{ variant.variantColor }}</p>
+</div>
+```
+
+- Incluir lista de variações do produto no main.js
+```js
+variants: [
+    {
+        variantId: 1,
+        variantColor: "azul"
+    },
+    {
+        variantId: 2,
+        variantColor: "branca"
+    }
+]
+```
+
