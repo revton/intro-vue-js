@@ -8,6 +8,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Introdução Vue.js</title>
     </head>
 
@@ -63,5 +64,57 @@ app.product = 'Outro produto'
 data: {
     product: 'Meias',
     description: 'Um par de meias'
+}
+```
+
+## Vinculando atriutos (Data Bindings) ##
+
+- Organizar a div **app**
+- Incluir na página uma imagem, alterando primeiro o index.html
+```html
+<div id="app">
+    <div class="product">
+        <div class="product-image">
+            <img src="" />
+        </div>
+        <div class="product-info">
+            <h1>{{ product }}</h1>
+            <p>{{ description }}</p>
+        </div>
+    </div>
+</div>
+```
+
+- Incluir na raiz do projeto um arquivo de imagem, a
+- Incluir no main.js
+```js
+data: {
+    product: 'Meias',
+    description: 'Um par de meias',
+    image: 'meia-azul.png'
+}
+```
+
+- Implementar o *data binding* no index.html
+```html
+<img v-bind:src="image" />
+```
+OU
+```html
+<img :src="image" />
+```
+
+- Incluir um link junto com as informações do produto no index.html
+```html
+<a v-bind:href="link" target="_blank">Mais produtos como esse</a>
+```
+
+- Incluir no main.js
+```js
+data: {
+    product: 'Meias',
+    description: 'Um par de meias',
+    image: 'meia-azul.png',
+    link: 'https://www.google.com/search?q=meias+azul'
 }
 ```
