@@ -20,7 +20,9 @@
                     </ul>
 
                     <div v-for="variant in variants" :key="variant.variantId">
-                        <p>{{ variant.variantColor }}</p>
+                        <p @mouseover="updateProductImage(variant.variantImage)">
+                            {{ variant.variantColor }}
+                        </p>
                     </div>
 
                     <ul>
@@ -30,7 +32,11 @@
                     <p v-if="stock_count > 10">Em estoque</p>
                     <p v-else-if="stock_count <= 10 && stock_count > 0">Quase acabando</p>
                     <p v-else>Acabou o estoque</p>
-                    <button v-show="stock_count > 0">Comprar</button>
+                    <button v-show="stock_count > 0" v-on:click="addToCart">Adicionar ao Carrinho</button>
+                    <button @click="removeFromCart">Remover do carrinho</button>
+                    <div class="cart">
+                        <p>{{ cart }}</p>
+                    </div>
                     <a v-bind:href="link" target="_blank">Mais produtos como esse</a>
                 </div>
             </div>

@@ -186,3 +186,83 @@ variants: [
 ]
 ```
 
+- Incluir lista com os tamanhos no index.html
+```html
+<ul>
+    <li v-for="size in sizes">{{ size }}</li>
+</ul>
+```
+
+- Incluir lista com os tamanhos no main.js
+```js
+sizes: ['P', 'M', 'G', 'GG']
+```
+
+## Manipulando evento (Event Handling) ##
+
+- Trocar botão para Adicionar ao carrinho em vez de comprar
+- Incluir quantidade de produtos adicionados ao carrinho
+```html
+<button v-show="stock_count > 0" v-on:click="cart += 1">Adicionar ao Carrinho</button>
+<div class="cart">
+    <p>{{ cart }}</p>
+</div>
+```
+
+- Implementar o click dentro de um método no main.js
+```js
+methods: {
+    addToCart(){
+        this.cart += 1
+    }
+}
+```
+
+- Fazer a chamada pelo evento de click no index.html
+```html
+<button v-show="stock_count > 0" v-on:click="addToCart">Adicionar ao Carrinho</button>
+```
+
+- Mudar imagem do produto, relacionando na variação de cor os caminhos para as imagens no main.js
+```js
+variants: [
+    {
+        variantId: 1,
+        variantColor: "azul",
+        variantImage: "meia-azul.png"
+    },
+    {
+        variantId: 2,
+        variantColor: "branca",
+        variantImage: "meia-branca.png"
+    }
+],
+```
+
+- Incluir método para alterar a imagen do produto no main.js
+```js
+updateProductImage(variantImage){
+    this.image = variantImage
+}
+```
+
+- Fazer a chamada pelo evento de mouseover no index.html
+```html
+<div v-for="variant in variants" :key="variant.variantId">
+    <p @mouseover="updateProductImage(variant.variantId)">
+        {{ variant.variantColor }}
+    </p>
+</div>
+```
+
+- Incluir método para remover produto do carrinho no main.js
+```js
+removeFromCart() {
+    this.cart -= 1
+}
+```
+
+- Incluir botão para remover produto do carrinho no index.html
+```html
+<button @click="removeFromCart">Remover do carrinho</button>
+```

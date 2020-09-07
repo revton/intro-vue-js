@@ -10,13 +10,27 @@ var app = new Vue({
         variants: [
             {
                 variantId: 1,
-                variantColor: "azul"
+                variantColor: "azul",
+                variantImage: "meia-azul.png"
             },
             {
                 variantId: 2,
-                variantColor: "branca"
+                variantColor: "branca",
+                variantImage: "meia-branca.png"
             }
         ],
-        sizes: ['P', 'M', 'G', 'GG']
+        sizes: ['P', 'M', 'G', 'GG'],
+        cart: 0
+    },
+    methods: {
+        addToCart(){
+            this.cart += 1
+        },
+        updateProductImage(variantImage){
+            this.image = variantImage
+        },
+        removeFromCart(){
+            this.cart -= 1
+        }
     }
 })
