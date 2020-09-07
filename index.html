@@ -3,6 +3,9 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <link rel="stylesheet" href="style.css">
+
         <title>Introdução Vue.js</title>
     </head>
 
@@ -19,9 +22,14 @@
                         <li v-for="detail in details">{{ detail }}</li>
                     </ul>
 
-                    <div v-for="variant in variants" :key="variant.variantId">
-                        <p @mouseover="updateProductImage(variant.variantImage)">
-                            {{ variant.variantColor }}
+                    <div class="color-box"
+                        v-for="variant in variants" 
+                        :key="variant.variantId"
+                        :style="{ backgroundColor: variant.variantColor}"
+                        @mouseover="updateProductImage(variant.variantImage)"
+                        >
+                        <p>
+                            {{ variant.variantName }}
                         </p>
                     </div>
 
@@ -29,10 +37,16 @@
                         <li v-for="size in sizes">{{ size }}</li>
                     </ul>
 
-                    <p v-if="stock_count > 10">Em estoque</p>
-                    <p v-else-if="stock_count <= 10 && stock_count > 0">Quase acabando</p>
-                    <p v-else>Acabou o estoque</p>
-                    <button v-show="stock_count > 0" v-on:click="addToCart">Adicionar ao Carrinho</button>
+                    <p v-if="stockCount > 10">Em estoque</p>
+                    <p v-else-if="stockCount <= 10 && stockCount > 0">Quase acabando</p>
+                    <p v-else :class="{ outOfStock: stockCount < 1 }">Acabou o estoque</p>
+                    <button 
+                        :disabled="stockCount < 1" 
+                        v-on:click="addToCart"
+                        :class="{ disabledButton: stockCount < 1}"
+                        >
+                        Adicionar ao Carrinho
+                    </button>
                     <button @click="removeFromCart">Remover do carrinho</button>
                     <div class="cart">
                         <p>{{ cart }}</p>

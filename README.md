@@ -266,3 +266,73 @@ removeFromCart() {
 ```html
 <button @click="removeFromCart">Remover do carrinho</button>
 ```
+
+## Manipulando classe e estilo (Class & Style Binding) ##
+
+- Altera como mostrar as variações de cores no index.html
+```html
+<div class="color-box"
+    v-for="variant in variants" 
+    :key="variant.variantId"
+    :style="{ backgroundColor: variant.variantColor}"
+    @mouseover="updateProductImage(variant.variantImage)"
+    >
+    <p>
+        {{ variant.variantName }}
+    </p>
+</div>
+```
+
+- Criar arquivo style.css
+```css
+.color-box {
+    width: 40px;
+    height: 40px;
+    margin-top: 5px;
+}
+```
+
+- Desabilitar botão de adicionar produto ao carrinho quando não tiver em estoque no index.html
+```html
+<button :disabled="stockCount < 1" v-on:click="addToCart">Adicionar ao Carrinho</button>
+```
+
+- Incluir estilo para os botões no style.css
+```css
+button {
+    margin-top: 30px;
+    border: none;
+    background-color: #1E95EA;
+    color: white;
+    height: 40px;
+    width: 100px;
+    font-size: 14px;
+} 
+
+.disabledButton {
+    background-color: #d8d8d8;
+}
+```
+
+- Incluir o evento para manipular a classe no arquivo index.html
+```html
+<button 
+    :disabled="stockCount < 1" 
+    v-on:click="addToCart"
+    :class="{ disabledButton: stockCount < 1}"
+    >
+    Adicionar ao Carrinho
+</button>
+```
+
+- Incluir o evento para manipular a classe no arquivo index.html
+```html
+<p v-else :class="{ outOfStock: stockCount < 1 }">Acabou o estoque</p>
+```
+
+- Incluir estilo para o texto Acabou o estoque no style.css
+```css
+.outOfStock {
+    text-decoration: line-through;
+}
+```

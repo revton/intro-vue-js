@@ -5,17 +5,19 @@ var app = new Vue({
         description: 'Um par de meias',
         image: 'meia-azul.png',
         link: 'https://www.google.com/search?q=meias+azul',
-        stock_count: 11,
+        stockCount: 11,
         details: ["80% algodão", "20% poliester", "Confortável"],
         variants: [
             {
                 variantId: 1,
-                variantColor: "azul",
+                variantName: "Azul",
+                variantColor: "blue",
                 variantImage: "meia-azul.png"
             },
             {
                 variantId: 2,
-                variantColor: "branca",
+                variantName: "Branca",
+                variantColor: "white",
                 variantImage: "meia-branca.png"
             }
         ],
