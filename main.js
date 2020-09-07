@@ -4,6 +4,7 @@ var app = new Vue({
         product: 'Meias',
         description: 'Um par de meias',
         image: 'meia-azul.png',
-        link: 'https://www.google.com/search?q=meias+azul'
+        link: 'https://www.google.com/search?q=meias+azul',
+        stock_count: 11
     }
 })

@@ -15,6 +15,10 @@
                 <div class="product-info">
                     <h1>{{ product }}</h1>
                     <p>{{ description }}</p>
+                    <p v-if="stock_count > 10">Em estoque</p>
+                    <p v-else-if="stock_count <= 10 && stock_count > 0">Quase acabando</p>
+                    <p v-else>Acabou o estoque</p>
+                    <button v-show="stock_count > 0">Comprar</button>
                     <a v-bind:href="link" target="_blank">Mais produtos como esse</a>
                 </div>
             </div>

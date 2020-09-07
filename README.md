@@ -67,7 +67,7 @@ data: {
 }
 ```
 
-## Vinculando atriutos (Data Bindings) ##
+## Vinculando atributos (Data Bindings) ##
 
 - Organizar a div **app**
 - Incluir na página uma imagem, alterando primeiro o index.html
@@ -117,4 +117,36 @@ data: {
     image: 'meia-azul.png',
     link: 'https://www.google.com/search?q=meias+azul'
 }
+```
+
+## Renderização condicional ##
+
+- Incluir os status do estoque do produto no index.html
+```html
+<p>Em estoque</p>
+<p>Quase acabando</p>
+<p>Acabou o estoque</p>
+```
+
+- Incluir campo para quantidade de estoque do produto no main.js
+```js
+data: {
+    product: 'Meias',
+    description: 'Um par de meias',
+    image: 'meia-azul.png',
+    link: 'https://www.google.com/search?q=meias+azul',
+    stock_count: 11
+}
+```
+
+- Incluir as condicionais de renderização no index.html
+```html
+<p v-if="stock_count > 10">Em estoque</p>
+<p v-else-if="stock_count <= 10 && stock_count > 0">Quase acabando</p>
+<p v-else>Acabou o estoque</p>
+```
+
+- Incluir botão para comprar com condicional index.html
+```html
+<button v-show="stock_count > 0">Comprar</button>
 ```
