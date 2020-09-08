@@ -277,9 +277,6 @@ removeFromCart() {
     :style="{ backgroundColor: variant.variantColor}"
     @mouseover="updateProductImage(variant.variantImage)"
     >
-    <p>
-        {{ variant.variantName }}
-    </p>
 </div>
 ```
 
@@ -289,6 +286,7 @@ removeFromCart() {
     width: 40px;
     height: 40px;
     margin-top: 5px;
+    border: 1px solid #d8d8d8;
 }
 ```
 
@@ -334,5 +332,149 @@ button {
 ```css
 .outOfStock {
     text-decoration: line-through;
+}
+```
+
+## Dados Computados (Computed Propriedades)
+
+- Incluir Marca ao produto no main.js
+```js
+data: {
+    brand: "Marca",
+    product: 'Meias',
+    description: 'Um par de meias',
+    image: 'meia-azul.png',
+    link: 'https://www.google.com/search?q=meias+azul',
+    stockCount: 11,
+    details: ["80% algodão", "20% poliester", "Confortável"],
+    variants: [
+        {
+            variantId: 1,
+            variantName: "Azul",
+            variantColor: "blue",
+            variantImage: "meia-azul.png"
+        },
+        {
+            variantId: 2,
+            variantName: "Branca",
+            variantColor: "white",
+            variantImage: "meia-branca.png"
+        }
+    ],
+    sizes: ['P', 'M', 'G', 'GG'],
+    cart: 0
+},
+```
+
+- Incluir o dado computado com o titulo do produto no main.js
+```js
+computed: {
+    title(){
+        return this.brand + ' ' + this.product
+    }
+}
+```
+
+- Trocar na tela para mostrar o titulo no index.html
+```html
+<div class="product-info">
+    <h1>{{ title }}</h1>
+    ...
+```
+
+- Alterar propriedade de image para pegar qual variação está selecionadada no main.js
+- ~~image: "meia-azul.png"~~
+```js
+selectedVariant: 0,
+```
+
+- Alterar na tela para passar o indice em vez da imagem no index.html
+```html
+<div class="color-box"
+    v-for="(variant, index) in variants" 
+    :key="variant.variantId"
+    :style="{ backgroundColor: variant.variantColor}"
+    @mouseover="updateProduct(index)"
+    >
+</div>
+```
+
+- Alterar implementar para trocar image do produto
+```js
+updateProduct(index){
+    this.selectedVariant = index
+},
+```
+
+- Não temos mais a propriedade *image*
+```html
+<div class="product-image">
+    <img v-bind:src="image" />
+</div>
+```
+
+- Incluir um novo dado computado para atender esse campo no main.js
+```js
+image(){
+    return this.variants[this.selectedVariant].variantImage
+}
+```
+
+- Incluir quantidade do produto para a variação no main.js
+```js
+variants: [
+    {
+        variantId: 1,
+        variantName: "Azul",
+        variantColor: "blue",
+        variantImage: "meia-azul.png",
+        variantQuantity:10
+    },
+    {
+        variantId: 2,
+        variantName: "Branca",
+        variantColor: "white",
+        variantImage: "meia-branca.png",
+        variantQuantity:0
+    }
+],
+```
+
+- Incluir um dado computado para verificar se tem estoque no main.js
+```js
+inStock(){
+    return this.variants[this.selectedVariant].variantQuantity
+}
+```
+
+- Alterar na tela para usar o dado computado no index.html
+```html
+<p v-else :class="{ outOfStock: !inStock }">Acabou o estoque</p>
+<button 
+    :disabled="!inStock" 
+    v-on:click="addToCart"
+    :class="{ disabledButton: !inStock}"
+    >
+    Adicionar ao Carrinho
+</button>
+```
+
+- Incluir campo na tela para mostrar mensagem se produto está a venda no index.html
+```html
+<p>{{ sale }}</p>
+```
+
+- Incluir flag para identificar se produto está a venda no main.js
+```js
+onSale: true
+```
+
+- Incluir dado computado com a mensagem se produto está a venda
+```js
+sale() {
+    if (this.onSale) {
+        return this.title + ' está a venda!'
+    } 
+    return this.title + ' não está a venda!'
 }
 ```
