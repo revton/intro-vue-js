@@ -686,3 +686,88 @@ Vue.component('product', {
                 <p>{{ description }}</p>
                 <product-detail :details="details"></product-detail>
 ```
+
+## Comunicação de eventos ##
+
+- Adicionar texto antes do componente de produto, no index.html
+```html
+<div class="cart">
+    <p>Carrinho ({{ cart }})</p>
+</div>
+```
+
+- Trocar implementação da função de adicionar item ao carrinho, no main.js
+```js
+addToCart(){
+    this.$emit('add-to-cart')
+},
+```
+
+- Aplicar o evento ao elemento product no index.html
+```html
+<product :premium="premium" @add-to-card="updateCart"></product>
+```
+
+- Adicionar variável com a quantidade do carrinho e método para atualizar o carrinho, no main.js
+```js
+var app = new Vue({
+    el: '#app',
+    data:{
+        premium: true,
+        cart: 0
+    },
+    methods: {
+        updateCart(){
+            this.cart += 1
+        }
+    }
+})
+```
+
+- Trocar a variável cart para array, onde vai ser adicionado os ids dos produtos, no main.js
+```js
+cart: []
+```
+
+- Trocar o valor do cart para mostrar o tamanho do array, no index.html
+```html
+<div class="cart">
+    <p>Carrinho ({{ cart.length }})</p>
+</div>
+```
+
+- Adicionar o parâmetro na função para adicionar o ids no array, no main.js 
+```js
+updateCart(id){
+    this.cart.push(id)
+}
+```
+- Passar o id do produto para a método, no main.js
+```js
+addToCart(){
+    this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
+},
+```
+
+- Trocar implementação da função de remover item ao carrinho, no main.js
+```js
+removeFromCart(){
+    this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)
+}
+```
+
+- Aplicar o evento ao elemento product no index.html
+```html
+<product :premium="premium" @add-to-card="updateCart"></product>
+```
+
+- Adicionar método para atualizar o carrinho ao remover produto, no main.js
+```js
+removeItem(id) {
+    for(var i = this.cart.length - 1; i >= 0; i--) {
+        if (this.cart[i] === id) {
+            this.cart.splice(i, 1)
+        }
+    }
+}
+```
