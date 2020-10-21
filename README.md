@@ -1,4 +1,4 @@
-# Introdução ao Vue.js  #
+# Introdução ao Vue.js 2 #
 
 ## Criando uma instância do Vue ##
 
@@ -162,7 +162,7 @@ data: {
 
 - Incluir a lista no main.js
 ```js
-details: ["80% algodão", "20% poliester", "Confortável"]
+details: ["80% algodão", "20% poliéster", "Confortável"]
 ```
 
 - Incluir lista de variações do produto no index.html
@@ -239,7 +239,7 @@ variants: [
 ],
 ```
 
-- Incluir método para alterar a imagen do produto no main.js
+- Incluir método para alterar a imagem do produto no main.js
 ```js
 updateProductImage(variantImage){
     this.image = variantImage
@@ -346,7 +346,7 @@ data: {
     image: 'meia-azul.png',
     link: 'https://www.google.com/search?q=meias+azul',
     stockCount: 11,
-    details: ["80% algodão", "20% poliester", "Confortável"],
+    details: ["80% algodão", "20% poliéster", "Confortável"],
     variants: [
         {
             variantId: 1,
@@ -382,13 +382,13 @@ computed: {
     ...
 ```
 
-- Alterar propriedade de image para pegar qual variação está selecionadada no main.js
+- Alterar propriedade de image para pegar qual variação está selecionada, no main.js
 - ~~image: "meia-azul.png"~~
 ```js
 selectedVariant: 0,
 ```
 
-- Alterar na tela para passar o indice em vez da imagem no index.html
+- Alterar na tela para passar o índice em vez da imagem no index.html
 ```html
 <div class="color-box"
     v-for="(variant, index) in variants" 
@@ -769,5 +769,208 @@ removeItem(id) {
             this.cart.splice(i, 1)
         }
     }
+}
+```
+
+## Formulário
+
+- Adicionar um componente para avaliação do produto, no main.js
+```js
+Vue.component('product-review', {
+    template: `
+        <input>
+    `,
+    data() {
+        return {
+            name: null
+        }
+    }
+})
+```
+
+- Adicionar ao template do componente produto a tag, no main.js
+```html
+<product-review></product-review> 
+```
+
+- Mudar o template do componente product-review, no main.js
+```html
+<form class="review-form" @submit.prevent="onSubmit">
+    <p>
+        <label for="name">Nome:</label>
+        <input id="name" v-model="name" placeholder="Nome">
+    </p>
+    
+    <p>
+        <label for="review">Avaliação:</label>      
+        <textarea id="review" v-model="review"></textarea>
+    </p>
+    
+    <p>
+        <label for="rating">Nota:</label>
+        <select id="rating" v-model.number="rating">
+            <option>5</option>
+            <option>4</option>
+            <option>3</option>
+            <option>2</option>
+            <option>1</option>
+        </select>
+    </p>
+        
+    <p>
+        <input type="submit" value="Submit">  
+    </p>    
+</form>
+```
+
+- Criar os campos usados no modelo do componente, no main.js
+```js
+data() {
+    return {
+        name: null,
+        review: null,
+        rating: null
+    }
+}
+```
+
+- Criar método para tratar os valores após o submit do formulário, no main.js
+```js
+onSubmit() {
+      let productReview = {
+        name: this.name,
+        review: this.review,
+        rating: this.rating
+      }
+      this.$emit('review-submitted', productReview)
+      this.name = null
+      this.review = null
+      this.rating = null
+    }
+```
+
+- Inserir no componente o atributo *review-submitted* para informar qual método deve ser chamado para adicionar a avaliação do produto, no main.js
+```html
+<product-review @review-submitted="addReview"></product-review> 
+```
+
+- Criar o método para adicionar revisão e o array dentro do componente do produto que vai receber, no main.js
+```js
+reviews: []
+```
+
+```js
+addReview(productReview){
+    this.reviews.push(productReview)
+}
+```
+
+- Criar uma lista para visualizar as avaliações adicionadas, no main.js
+```html
+<div>
+    <h2>Avaliações</h2>
+    <p v-if="!reviews.length">Não há avaliações ainda.</p>
+    <ul>
+        <li v-for="review in reviews">
+            <p>{{ review.name }}</p>
+            <p>Rating: {{ review.rating }}</p>
+            <p>{{ review.review }}</p>
+        </li>
+    </ul>
+</div>
+```
+
+- Criar validação para o formulário de avaliação, no main.js
+```js
+data() {
+    return {
+        name: null,
+        review: null,
+        rating: null,
+        errors: []
+    }
+},
+```
+
+```js
+onSubmit() {
+    if(this.name && this.review && this.rating) {
+        let productReview = {
+            name: this.name,
+            review: this.review,
+            rating: this.rating
+        }
+        this.$emit('review-submitted', productReview)
+        this.name = null
+        this.review = null
+        this.rating = null
+    } else {
+        if(!this.name) this.errors.push("Nome é obrigatório'.")
+        if(!this.review) this.errors.push("Avaliação é obrigatório.")
+        if(!this.rating) this.errors.push("Nota é obrigatório.")
+    }
+    
+}
+```
+
+```html
+<p v-if="errors.length">
+    <b>Por favor, corrija os seguintes erro(s):</b>
+    <ul>
+        <li v-for="error in errors">{{ error }}</li>
+    </ul>
+</p>    
+```
+
+- Criar um campo para perguntar se recomenda o produto, no main.js
+```html
+<p>Você recomendaria esse produto?</p>
+<label>
+    <input type="radio" value="Sim" v-model="recommend"/>
+    Sim
+</label>
+<label>
+    <input type="radio" value="Não" v-model="recommend"/>
+    Não
+</label>
+```
+
+```js
+data() {
+    return {
+        name: null,
+        review: null,
+        rating: null,
+        recommend: null,
+        errors: []
+    }
+},
+```
+
+- Validar o novo campo, no main.js
+```js
+methods: {
+    onSubmit() {
+        if(this.name && this.review && this.rating && this.recommend) {
+            let productReview = {
+                name: this.name,
+                review: this.review,
+                rating: this.rating,
+                recommend: this.recommend
+            }
+            this.$emit('review-submitted', productReview)
+            this.name = null
+            this.review = null
+            this.rating = null
+            this,recommend = null
+        } else {
+            if(!this.name) this.errors.push("Nome é obrigatório'.")
+            if(!this.review) this.errors.push("Avaliação é obrigatório.")
+            if(!this.rating) this.errors.push("Nota é obrigatório.")
+            if(!this.recommend) this.errors.push("Recomendação é obrigatório.")
+        }
+        
+    }
+
 }
 ```
