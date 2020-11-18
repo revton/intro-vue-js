@@ -1,3 +1,5 @@
+var eventBus = new Vue()
+
 Vue.component('product-review', {
     template: `
     <form class="review-form" @submit.prevent="onSubmit">
@@ -63,7 +65,7 @@ Vue.component('product-review', {
                     rating: this.rating,
                     recommend: this.recommend
                 }
-                this.$emit('review-submitted', productReview)
+                eventBus.$emit('review-submitted', productReview)
                 this.name = null
                 this.review = null
                 this.rating = null
@@ -138,19 +140,8 @@ Vue.component('product', {
             <button @click="removeFromCart">Remover do carrinho</button>
             <a v-bind:href="link" target="_blank">Mais produtos como esse</a>
 
-            <div>
-                <h2>Avaliações</h2>
-                <p v-if="!reviews.length">Não há avaliações ainda.</p>
-                <ul>
-                    <li v-for="review in reviews">
-                        <p>{{ review.name }}</p>
-                        <p>Rating: {{ review.rating }}</p>
-                        <p>{{ review.review }}</p>
-                    </li>
-                </ul>
-            </div>
+            <product-tabs :reviews="reviews"></product-tabs>
 
-            <product-review @review-submitted="addReview"></product-review> 
         </div>
     </div>
     `,
@@ -194,9 +185,6 @@ Vue.component('product', {
         },
         removeFromCart(){
             this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)
-        },
-        addReview(productReview){
-            this.reviews.push(productReview)
         }
     },
     computed: {
@@ -220,6 +208,52 @@ Vue.component('product', {
                 return "0,00"
             }
             return "10,00"
+        }
+    },
+    mounted(){
+        eventBus.$on('review-submitted', productReview => {
+            this.reviews.push(productReview)
+        })
+    }
+})
+
+Vue.component('product-tabs', {
+    props: {
+        reviews: {
+            type: Array,
+            required: false
+        }
+    },
+    template: `
+        <div>
+            <span class="tab"
+                :class="{ activeTab: selectedTab == tab}"
+                v-for="(tab, index) in tabs" 
+                :key="index"
+                @click="selectedTab = tab">
+                {{ tab }}</span>
+
+            <div v-show="selectedTab == 'Avaliações'">
+                <h2>Avaliações</h2>
+                <p v-if="!reviews.length">Não há avaliações ainda.</p>
+                <ul>
+                    <li v-for="review in reviews">
+                        <p>{{ review.name }}</p>
+                        <p>Rating: {{ review.rating }}</p>
+                        <p>{{ review.review }}</p>
+                    </li>
+                </ul>
+            </div>
+    
+            <product-review 
+                v-show="selectedTab == 'Faça uma avaliação'">
+            </product-review> 
+        </div>        
+    `,
+    data() {
+        return {
+            tabs:["Avaliações", "Faça uma avaliação"],
+            selectedTab: "Avaliações"
         }
     }
 })

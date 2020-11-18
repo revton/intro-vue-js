@@ -971,6 +971,137 @@ methods: {
         }
         
     }
-
 }
 ```
+## Abas
+
+- Criar um componente para as abas, no main.js
+```js
+Vue.component('product-tabs', {
+    template: `
+        <div>
+            <span class="tab"
+                v-for="(tab, index) in tabs" :key="index">
+                {{ tab }}</span>
+        </div>
+    `,
+    data() {
+        return {
+            tabs:["Avaliações", "Faça uma avaliação"]
+        }
+    }
+})
+```
+
+- Adicionar ao produto o componente, no main.js
+```html
+<product-tabs></product-tabs>
+```
+
+- Identificar qual aba está selecionada, no main.js
+```js
+Vue.component('product-tabs', {
+    template: `
+        <div>
+            <span class="tab"
+                :class="{ activeTab: selectedTab == tab}"
+                v-for="(tab, index) in tabs" 
+                :key="index"
+                @click="selectedTab = tab">
+                {{ tab }}</span>
+        </div>
+    `,
+    data() {
+        return {
+            tabs:["Avaliações", "Faça uma avaliação"],
+            selectedTab: "Avaliações"
+        }
+    }
+})
+```
+
+- Implementar para mostrar o conteúdo da aba selecionada, no main.js
+```js
+Vue.component('product-tabs', {
+    props: {
+        reviews: {
+            type: Array,
+            required: false
+        }
+    },
+    template: `
+        <div>
+            <span class="tab"
+                :class="{ activeTab: selectedTab == tab}"
+                v-for="(tab, index) in tabs" 
+                :key="index"
+                @click="selectedTab = tab">
+                {{ tab }}</span>
+
+            <div v-show="selectedTab == 'Avaliações'">
+                <h2>Avaliações</h2>
+                <p v-if="!reviews.length">Não há avaliações ainda.</p>
+                <ul>
+                    <li v-for="review in reviews">
+                        <p>{{ review.name }}</p>
+                        <p>Rating: {{ review.rating }}</p>
+                        <p>{{ review.review }}</p>
+                    </li>
+                </ul>
+            </div>
+    
+            <product-review 
+                v-show="selectedTab == 'Faça uma avaliação'"
+                @review-submitted="addReview"></product-review> 
+        </div>        
+    `,
+    data() {
+        return {
+            tabs:["Avaliações", "Faça uma avaliação"],
+            selectedTab: "Avaliações"
+        }
+    }
+})
+```
+
+- Adicionar o propriedade das avaliações, no main.js
+```html
+<product-tabs :reviews="reviews"></product-tabs>
+```
+
+- Remover a implementação para adicionar avaliação do componentes produto, no main.js
+```js        
+addReview(productReview){
+    this.reviews.push(productReview)
+}
+```
+
+- Criar um novo objeto de Vue, no main.js
+```js
+var eventBus = new Vue()
+```
+
+- Alterar a chamada dentro do componente de avaliação do produto a chamada para adicionar a avaliação, no main.js
+```js
+methods: {
+    onSubmit() {
+        if(this.name && this.review && this.rating && this.recommend) {
+            let productReview = {
+                name: this.name,
+                review: this.review,
+                rating: this.rating,
+                recommend: this.recommend
+            }
+            eventBus.$emit('review-submitted', productReview)
+...
+```
+
+- Criar o implementação de adicionar dentro do componente de produto, no main.js
+```js
+mounted(){
+    eventBus.$on('review-submitted', productReview => {
+        this.reviews.push(productReview)
+    })
+}
+```
+
